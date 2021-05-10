@@ -10,6 +10,7 @@ class AttPayslipRun(models.Model):
     state = fields.Selection([
         ('draft', 'Draft'),
         ('attendance_sheet', 'Attendance Sheet'),
+        ('confirmed', 'Confirmed'),
         ('payslip', 'Payslip'),
         ('done', 'Done'),
     ], string='Status', index=True, readonly=True, copy=False, default='draft')
@@ -37,15 +38,19 @@ class AttPayslipRun(models.Model):
         atteandance = self.env['attendance.sheet'].search([('batattempid', '=', self.id)])
         for value in atteandance:
             value.action_confirm()
-            value.action_approve()
-        self.write({'state': 'payslip'})
+            # value.action_approve()
+        self.write({'state': 'confirmed'})
 
     def confirmpayslip(self):
         atteandance = self.env['attendance.sheet'].search([('batattempid', '=', self.id)])
         for value in atteandance:
+            value.action_approve()
             value.payslip_id.compute_sheet()
             value.payslip_id.action_payslip_done()
         self.write({'state': 'done'})
+
+    def action_draft(self):
+        self.write({'state': 'attendance_sheet'})
 
     def action_open_attpay(self):
         self.ensure_one()
