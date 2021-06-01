@@ -90,6 +90,21 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="text-left;font-size: 18px;">
+                                                            <strong>Tax Number</strong>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.company_id.vat"/>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-right;font-size: 18px;">
+                                                            <strong>الرقم الضريبى</strong>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             </table>
                                         </td>
                                     </tr>
@@ -277,9 +292,9 @@
                                     </tr>
                                 </table>
                                 <table class="table table-striped" dir="rtl" style="width:100%;">
-                                    <tr>
+                                    <tr style="height: 5px;">
                                         <th class="text-center"
-                                            style="width: 50%;background:#cccccc;color: #333333;">
+                                            style="width: 55%;background:#cccccc;color: #333333;">
                                             الوصف
                                             <br/>Description
                                         </th>
@@ -294,28 +309,28 @@
                                             <br/>Unit Price
                                         </th>
                                         <th class="text-center"
-                                            style="width: 25%;background:#cccccc;color: #333333;">
+                                            style="width: 15%;background:#cccccc;color: #333333;">
                                             الإجمالي
                                             <br/>Total
                                         </th>
                                     </tr>
                                     <t t-foreach="doc.order_line" t-as="line">
-                                        <tr>
-                                            <td style="padding: 0;" valign="center" align="center">
+                                        <tr style="height: 30px;">
+                                            <td style="padding: 0;font-size: 14pt;" valign="center" align="center">
                                                 <span style="color: #333333;" t-esc="line.name"/>
                                             </td>
-                                            <td style="padding: 0;" valign="center" align="center">
+                                            <td style="padding: 0;font-size: 14pt;" valign="center" align="center">
                                                 <span style="color: #333333;" t-esc="line.product_uom_qty"/>
                                             </td>
-                                            <td style="padding: 0;" valign="center" align="center">
+                                            <td style="padding: 0;font-size: 14pt;" valign="center" align="center">
                                                 <span style="color: #333333;" t-esc="line.price_unit"/>
                                             </td>
-                                            <td style="padding: 0;" valign="center" align="center">
+                                            <td style="padding: 0;font-size: 14pt;" valign="center" align="center">
                                                 <span style="color: #333333;" t-esc="line.price_subtotal"/>
                                             </td>
                                         </tr>
                                     </t>
-                                    <tr>
+                                    <tr style="height: 18px;">
                                         <td colspan="2" rowspan="4">
                                             <strong class="pull-right" style="color: #333333;">
                                                 الشروط والأحكام
@@ -325,7 +340,8 @@
                                             <strong class="pull-left" style="color: #333333;">
                                                 Terms and Conditions
                                             </strong>
-                                            <br/><br/>
+                                            <br/>
+                                            <br/>
                                             <separator/>
                                             <span class="oe_subtotal_footer_separator"
                                                   style="color: #333333;text-center;" t-field="doc.note"/>
@@ -345,7 +361,7 @@
                                             </strong>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr style="height: 18px;">
                                         <td style="background:#cccccc;text-center;">
                                             <strong style="color: #333333;" class="pull-right">الضريبة
                                                 <br/>
@@ -360,7 +376,7 @@
                                             </strong>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr style="height: 18px;">
                                         <td style="background:#cccccc;">
                                             <strong style="color: #333333;" class="pull-right">الخصومات
                                                 <br/>
@@ -377,7 +393,7 @@
                                             </t>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr style="height: 18px;">
                                         <td style="background:#cccccc;">
                                             <strong style="color: #333333;" class="pull-right">المبلغ
                                                 الإجمالي
@@ -395,8 +411,6 @@
                                     </tr>
                                 </table>
                             </div>
-                            <br/>
-                            <br/>
                             <div class="row">
                                 <div class="col-xs-4">
                                     <strong class="text-left"
@@ -404,6 +418,12 @@
                                         Signature: .................................... التوقيع
                                     </strong>
                                 </div>
+                            </div>
+                            <br/>
+                            <div style="text-center">
+                                <center>
+                                    <strong style="color: #333333;">سعدنا بخدمتكم ... ونشكرك لإختيارك كير ون</strong>
+                                </center>
                             </div>
                         </t>
                     </div>

@@ -17,6 +17,12 @@ class SaleOrder(models.Model):
                                  copy=False, default=fields.Datetime.now,
                                  help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.")
 
+    def _compute_access_url(self):
+        super(SaleOrder, self)._compute_access_url()
+        for order in self:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            order.access_url = base_url + '/my/orders/%s' % (order.id)
+
     @api.depends('name')
     def _get_mrp(self):
         for order in self:

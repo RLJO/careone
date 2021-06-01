@@ -33,7 +33,9 @@ Features of Whatsapp Odoo All in one Integration
     * Send message when a user signs up on the Odoo website page.
 
     """,
-    'depends': ['contacts', 'base_setup', 'point_of_sale', 'delivery', 'sale', 'crm', 'project', 'stock', 'sale_management', 'account', 'purchase_stock', 'website'],
+    'depends': ['contacts', 'base_setup', 'point_of_sale', 'delivery', 'sale', 'crm',
+                'project', 'stock', 'sale_management', 'account', 'purchase_stock', 'website',
+                'careone_reports'],
     'data': [
         'security/ir.model.access.csv',
         'wizard/send_wp_msg_views.xml',

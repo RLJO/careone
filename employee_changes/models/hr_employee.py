@@ -48,11 +48,18 @@ class HrEmployee(models.Model):
                     visa_expiration_template.send_mail(employee.id, force_send=True, email_values=email_values)
 
     # end of service section
-    employee_type2 = fields.Selection([('worker', 'Worker'), ('employee', 'Employee')], string='End of Service For')
+    # employee_type2 = fields.Selection([('worker', 'Worker'), ('employee', 'Employee')], string='End of Service For')
+    employee_worth = fields.Selection(selection=[('from_employer', 'Termination from employer'),
+                                                 ('less_than_2_years', "Employee resigns less than 2 years"),
+                                                 ('from_2_to_5', 'Employee resigns from 2 years to 5 years'),
+                                                 ('from_5_to_10', 'Employee resigns from 5 to 10 years'),
+                                                 ('after_10', 'Employee resigns after 10 years')],
+                                      string='Employee Worth')
     calculate_balance = fields.Boolean('Calculate?')
     end_service_date = fields.Date('Date')
     balance = fields.Float('Balance', compute="_get_end_service_balance")
     add_to_payslip = fields.Boolean('Add to Payslip')
+    rewarded_result = fields.Float(string='Rewarded', readonly=True)
 
     # @api.onchange('contract_id.bank_accounts')
     # def _compute_bank_accounts(self):
@@ -60,23 +67,24 @@ class HrEmployee(models.Model):
     #         this.bank_accounts = this.contract_id.bank_accounts
     #         for line in this.bank_accounts:
     #             line.emp_id = this.id
-            # if this.contract_id.bank_accounts:
-            #     this.bank_accounts =[(5,0,0)]
-            #     for line in this.contract_id.bank_accounts:
-            #         this.bank_accounts = [(0,0,{'emp_id':this.id,
-            #                             'name':line.name,
-            #                             'bank_account_number':line.bank_account_number})]
-            # else:
-            #     this.bank_accounts =[(5,0,0)]
+    # if this.contract_id.bank_accounts:
+    #     this.bank_accounts =[(5,0,0)]
+    #     for line in this.contract_id.bank_accounts:
+    #         this.bank_accounts = [(0,0,{'emp_id':this.id,
+    #                             'name':line.name,
+    #                             'bank_account_number':line.bank_account_number})]
+    # else:
+    #     this.bank_accounts =[(5,0,0)]
 
-    bank_accounts = fields.One2many('bank.account','emp_id')
+    bank_accounts = fields.One2many('bank.account', 'emp_id')
     # bank_accounts = fields.One2many('bank.account','emp_id',compute = _compute_bank_accounts)
     iban = fields.Char('IBAN')
+
     # iban = fields.Char('IBAN',related="contract_id.iban")
 
-    @api.depends('employee_type2', 'calculate_balance', 'end_service_date')
+    @api.depends('calculate_balance', 'end_service_date')
     def _get_end_service_balance(self):
-        balance = 0
+        self.balance = 0.0
         if self.calculate_balance:
             if not self.end_service_date:
                 return True
@@ -87,15 +95,26 @@ class HrEmployee(models.Model):
                 end = datetime.strptime(str(self.end_service_date), '%Y-%m-%d')
                 r = relativedelta.relativedelta(end, start)
                 years = int(r.years)
+                months = r.months + (12 * r.years)
 
-                if self.employee_type2 == 'worker':
-                    if years > 2:
-                        balance = contract.wage * years
-                    else:
-                        balance = contract.wage * 0.5 * years
-                elif self.employee_type2 == 'employee':
-                    balance = contract.wage * years
-        self.balance = balance
+                end_of_service_calculation = contract.wage + contract.housing_allowance + contract.transportation_allowance
+
+                if 6 > years >= 1:
+                    self.balance = end_of_service_calculation * 0.5 * months
+                elif years > 5:
+                    self.balance = end_of_service_calculation * months
+
+            if self.add_to_payslip:
+                if self.employee_worth == 'from_employer':
+                    self.rewarded_result = self.balance
+                elif self.employee_worth == 'less_than_2_years':
+                    self.rewarded_result = 0.0
+                elif self.employee_worth == 'from_2_to_5':
+                    self.rewarded_result = self.balance / 3
+                elif self.employee_worth == 'from_5_to_10':
+                    self.rewarded_result = self.balance * 2 / 3
+                else:
+                    self.rewarded_result = self.balance
 
 
 class BankAccount(models.Model):
