@@ -1,0 +1,519 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="paperformat_portrait" model="report.paperformat">
+            <field name="name">Invoice</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">3</field>
+            <field name="margin_bottom">30</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">30</field>
+            <field name="dpi">100</field>
+        </record>
+
+        <report
+                id="report_invoice_view_details"
+                string="Invoice Report"
+                model="account.move"
+                report_type="qweb-pdf"
+                name="careone_reports.print_invoice_view_details_template"
+                file="careone_reports.print_invoice_view_details_template"
+                paperformat="paperformat_portrait"
+                menu="True"/>
+
+        <template id="custom_external_layout_standard">
+            <div class="article o_report_layout_standard">
+                <t t-raw="0"/>
+            </div>
+            <br/>
+            <br/>
+            <div class="footer">
+                <div class="text-center" style="border-top: 1px solid black;">
+                    <ul class="list-inline mb4">
+                        <li class="pull-left">
+                            <strong style="color: #333333;">
+                                <span style="margin-right:150px;">
+                                    <i class="fas fa-map-marker"
+                                       style="font-size:20px ; color:#696761;"/>&#160; : Jeddah, Saudi Arabia.
+                                </span>
+                                <br/>
+                                <span style="margin-right:150px;">
+                                    <i class="fa fa-mobile-phone"
+                                       style="font-size:20px ; color:#696761;"/>&#160; : 0506068020
+                                </span>
+                                <br/>
+                                <i class="far fa-envelope"
+                                   style="font-size:20px ; color:#696761;"/>
+                                : info@care1cc.com
+                                &#160; &#160; &#160; &#160;
+                                C.R : 4030243669
+                            </strong>
+                        </li>
+                        <li class="pull-right" t-if="report_type == 'pdf'">
+                            <strong style="color: #333333;">
+                                <span style="margin-left:300px;">
+                                    جدة ، المملكة العربية السعودية
+                                    :
+                                    <i class="fas fa-map-marker"
+                                       style="font-size:20px ; color:#696761;"/>
+                                </span>
+                                <br/>
+                                <span style="margin-left:380px;">
+                                    ۰٥۰٦۰٦۸۰۲۰ :
+                                    <i class="fa fa-mobile-phone"
+                                       style="font-size:20px ; color:#696761;"/>
+                                </span>
+                                <br/>
+                                <i style="font-size:20px" class="fa">&#xf09a;</i>
+                                &#160;
+                                <i style="font-size:20px" class="fa">&#xf099;</i>
+                                &#160;
+                                <i style="font-size:20px" class="fa">&#xf16d;</i>
+                                &#160;
+                                <i style="font-size:20px" class="fa">&#xf167;</i>
+                                &#160;
+                                <i style="font-size:20px" class="fa">&#xf2ab;</i>
+                                /care1cc
+                                &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;
+                                س.ت : ٤۰۳۰۲٤۳٦٦۹
+                                &#160; &#160; &#160;
+                                info@care1cc.com :
+                                <i class="far fa-envelope"
+                                   style="font-size:20px ; color:#696761;"/>
+                            </strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </template>
+
+        <template id="print_invoice_view_details_template">
+            <t t-call="web.html_container">
+                <t t-call="careone_reports.custom_external_layout_standard">
+                    <style type="text/css">
+                        @font-face {
+                        font-family: 'TheSans-Plain_0';
+                        src: local('TheSans-Plain_0'), local('TheSans-Plain_0'),
+                        url('/careone_reports/static/fonts/TheSans-Plain_0.otf') format('truetype');
+                        }
+                        *{
+                        font-family: TheSans-Plain_0;
+                        }
+                    </style>
+                    <div class="page" style="font_size:16pt !important;">
+                        <t t-foreach="docs" t-as="doc">
+                            <div class="col-md-6">
+                                <table class="table table-borderless" style="width:100%;">
+                                    <tr>
+                                        <td>
+                                            <img t-if="doc.company_id.logo" class=" text-center"
+                                                 t-att-src="image_data_uri(doc.company_id.logo)"
+                                                 style="max-height: 200px;max-width: 350;text-center" alt="Logo"/>
+                                        </td>
+                                        <td>
+                                            <h3 class="text-center" style="font-size: 25px;">
+                                                <t t-if="doc.type == 'out_invoice'">
+                                                    <strong>Invoice &#160; &#160; &#160; &#160; &#160; &#160; &#160;
+                                                        &#160; &#160; &#160; &#160; &#160; فـاتـورة مـبـيـعـات
+                                                    </strong>
+                                                </t>
+                                                <t t-else="">
+                                                    <strong>Bill &#160; &#160; &#160; &#160; &#160; &#160; &#160;
+                                                        &#160; &#160; &#160; &#160; &#160; فـاتـورة مـشـتـريـات
+                                                    </strong>
+                                                </t>
+                                            </h3>
+                                            <br/>
+                                            <table class="table table-borderless" style="width:100%;">
+                                                <tr>
+                                                    <td>
+                                                        <div class="text-left;font-size: 18px;">
+                                                            <strong>Invoice Number</strong>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.name"/>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-right;font-size: 18px;">
+                                                            <strong>رقم الفاتورة</strong>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="text-left;font-size: 18px;">
+                                                            <strong>Invoice Date</strong>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.invoice_date"/>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-right;font-size: 18px;">
+                                                            <strong>تاريخ الفاتورة</strong>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="text-left;font-size: 18px;">
+                                                            <strong>Tax Number</strong>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span t-field="doc.company_id.vat"/>
+                                                    </td>
+                                                    <td>
+                                                        <div class="text-right;font-size: 18px;">
+                                                            <strong>الرقم الضريبى</strong>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table class="table table-borderless" style="width:100%;">
+                                    <tr>
+                                        <td style="width: 51%;">
+                                            <table class="table table-striped"
+                                                   style="width:100%;">
+                                                <tr>
+                                                    <td colspan="3"
+                                                        style="text-right;background-color:#cccccc;">
+                                                        <strong class="pull-left"
+                                                                style="font-size: 16px; color: #333333;">
+                                                            Vehicle information
+                                                        </strong>
+                                                        &#160; &#160; &#160; &#160; &#160;
+                                                        <strong class="pull-right"
+                                                                style="font-size: 18px;color: #333333;">
+                                                            بـيـانـات السيارة
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right;">
+                                                        <strong style="color: #333333;">Car Brand</strong>
+                                                    </td>
+                                                    <td align="center">
+                                                        <span style="color: #333333;"
+                                                              t-field="doc.vehicle_id.model_id.brand_id.name"/>
+                                                    </td>
+                                                    <td>
+                                                        <strong class="pull-right" style="color: #333333;">نوع السيارة
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right;">
+                                                        <strong style="color: #333333;">Model</strong>
+                                                    </td>
+                                                    <td align="center">
+                                                        <t t-if="doc.vehicle_id.model_id">
+                                                            <span style="color: #333333;"
+                                                                  t-field="doc.vehicle_id.model_id.name"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <strong class="pull-right" style="color: #333333;">الموديل
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right;">
+                                                        <strong style="color: #333333;">License Plate</strong>
+                                                    </td>
+                                                    <td align="center">
+                                                        <t t-if="doc.vehicle_id.license_plate">
+                                                            <span style="color: #333333;"
+                                                                  t-field="doc.vehicle_id.license_plate"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <strong class="pull-right" style="color: #333333;">اللوحة
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right;">
+                                                        <strong style="color: #333333;">Size</strong>
+                                                    </td>
+                                                    <td align="center">
+                                                        <span style="color: #333333;"
+                                                              t-field="doc.vehicle_id.size"/>
+                                                    </td>
+                                                    <td>
+                                                        <strong class="pull-right" style="color: #333333;">الحجم
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right;">
+                                                        <strong style="color: #333333;">Color</strong>
+                                                    </td>
+                                                    <td align="center">
+                                                        <t t-if="doc.vehicle_id.color">
+                                                            <span style="color: #333333;"
+                                                                  t-field="doc.vehicle_id.color"/>
+                                                        </t>
+                                                    </td>
+                                                    <td>
+                                                        <strong class="pull-right" style="color: #333333;">اللون
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width: 51%;">
+                                            <table class="table table-striped" style="width:100%;">
+                                                <tr>
+                                                    <td colspan="3"
+                                                        style="text-right;background-color:#cccccc;font-size: 18px;">
+                                                        <strong style="color: #333333;">
+                                                            <t t-if="doc.type == 'out_invoice'">
+                                                                Customer information &#160; &#160; &#160; &#160; &#160;
+                                                                &#160;&#160; &#160; &#160;
+                                                                &#160;&#160; &#160; &#160;
+                                                                بـيـانـات العـمـيـل
+                                                            </t>
+                                                            <t t-else="">
+                                                                Vendor information &#160; &#160; &#160; &#160; &#160;
+                                                                &#160;&#160; &#160; &#160;
+                                                                &#160;&#160; &#160; &#160;
+                                                                بـيـانـات المـورد
+                                                            </t>
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right;" style="width:25%;">
+                                                        <strong style="color: #333333;">Name</strong>
+                                                    </td>
+                                                    <td style="width: 50%;" align="center">
+                                                        <span style="color: #333333;"
+                                                              t-field="doc.partner_id.name"/>
+                                                    </td>
+                                                    <td style="text-left;width:25%;">
+                                                        <strong class="pull-right" style="color: #333333;">
+                                                            الإسم
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right;">
+                                                        <strong style="color: #333333;">Mobil</strong>
+                                                    </td>
+                                                    <td align="center">
+                                                        <t t-if="doc.partner_id.mobile">
+                                                            <span style="color: #333333;"
+                                                                  t-field="doc.partner_id.mobile"/>
+                                                        </t>
+                                                    </td>
+                                                    <td style="text-right;">
+                                                        <strong class="pull-right" style="color: #333333;">الجوال
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right;">
+                                                        <strong style="color: #333333;">Email</strong>
+                                                    </td>
+                                                    <td align="center">
+                                                        <t t-if="doc.partner_id.email">
+                                                            <span style="color: #333333;"
+                                                                  t-field="doc.partner_id.email"/>
+                                                        </t>
+                                                    </td>
+                                                    <td style="text-right;">
+                                                        <strong class="pull-right" style="color: #333333;">الإيميل
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-right;">
+                                                        <strong style="color: #333333;">Address</strong>
+                                                    </td>
+                                                    <td align="center">
+                                                        <span t-field="doc.partner_id" style="color: #333333;"
+                                                              class="pull-center"
+                                                              t-options='{"widget": "contact", "fields": ["address"], "no_marker": True, "phone_icons": True}'/>
+                                                    </td>
+                                                    <td style="text-right;">
+                                                        <strong class="pull-right" style="color: #333333;">العنوان
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong style="color: #333333;">Customer VAT #</strong>
+                                                    </td>
+                                                    <td align="center">
+                                                        <t t-if="doc.partner_id.vat">
+                                                            <span style="text-center;color: #333333;"
+                                                                  t-field="doc.partner_id.vat"/>
+                                                        </t>
+                                                    </td>
+                                                    <td class="pull-right" align="right">
+                                                        <strong style="text-center; color: #333333;">الرقم الضريبى
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+
+
+                                <table class="table table-striped" dir="rtl" style="width:100%;">
+                                    <tr style="height: 5px;">
+                                        <th class="text-center"
+                                            style="width: 55%;background:#cccccc;color: #333333;">
+                                            الوصف
+                                            <br/>Description
+                                        </th>
+                                        <th class="text-center"
+                                            style="width: 15%;background:#cccccc;color: #333333;">
+                                            الكمية
+                                            <br/>Qty
+                                        </th>
+                                        <th class="text-center"
+                                            style="width: 15%;background:#cccccc;color: #333333;">
+                                            سعر الوحدة
+                                            <br/>Unit Price
+                                        </th>
+                                        <th class="text-center"
+                                            style="width: 15%;background:#cccccc;color: #333333;">
+                                            الإجمالي
+                                            <br/>Total
+                                        </th>
+                                    </tr>
+                                    <t t-foreach="doc.invoice_line_ids" t-as="line">
+                                        <tr style="height: 30px;">
+                                            <td style="padding: 0;font-size: 14pt;" valign="center" align="center">
+                                                <span style="color: #333333;" t-esc="line.name"/>
+                                            </td>
+                                            <td style="padding: 0;font-size: 14pt;" valign="center" align="center">
+                                                <span style="color: #333333;" t-esc="line.quantity"/>
+                                            </td>
+                                            <td style="padding: 0;font-size: 14pt;" valign="center" align="center">
+                                                <span style="color: #333333;" t-esc="line.price_unit"/>
+                                            </td>
+                                            <td style="padding: 0;font-size: 14pt;" valign="center" align="center">
+                                                <span style="color: #333333;" t-esc="line.price_subtotal"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td colspan="2" rowspan="4">
+                                            <strong class="pull-right" style="color: #333333;">
+                                                الشروط والأحكام
+                                            </strong>
+                                            &#160; &#160; &#160; &#160; &#160; &#160; &#160;
+                                            &#160; &#160; &#160; &#160; &#160; &#160; &#160;
+                                            <strong class="pull-left" style="color: #333333;">
+                                                Terms and Conditions
+                                            </strong>
+                                            <br/>
+                                            <br/>
+                                            <separator/>
+                                            <span class="oe_subtotal_footer_separator"
+                                                  style="color: #333333;text-center;" t-field="doc.narration"/>
+                                        </td>
+                                        <td style="background:#cccccc;" align="right">
+                                            <strong style="text-right;color: #333333;font-size: 16px;">الإجمالي الخاضع
+                                                <br/>
+                                                للضريبة
+                                                <br/>Taxable Amount
+                                            </strong>
+                                        </td>
+                                        <td align="center">
+                                            <strong>
+                                                <span t-field="doc.amount_untaxed"
+                                                      style="text-center;color: #333333;font-size: 18px;"
+                                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background:#cccccc;text-center;">
+                                            <strong style="color: #333333;" class="pull-right">الضريبة
+                                                <br/>
+                                                VAT
+                                            </strong>
+                                        </td>
+                                        <td align="center">
+                                            <strong>
+                                                <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
+                                                    <span style="text-center;color: #333333;font-size: 18px;"
+                                                          class="pull-center" t-esc="amount_by_group[3]"/>
+                                                </t>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background:#cccccc;">
+                                            <strong style="color: #333333;" class="pull-right">الخصومات
+                                                <br/>
+                                                Discount
+                                            </strong>
+                                        </td>
+                                        <td align="center">
+                                            <t t-if="doc.total_discount">
+                                                <strong>
+                                                    <span t-field="doc.total_discount"
+                                                          style="text-center;color: #333333;font-size: 18px;"
+                                                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                                </strong>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background:#cccccc;">
+                                            <strong style="color: #333333;" class="pull-right">المبلغ
+                                                الإجمالي
+                                                <br/>
+                                                Total Amount
+                                            </strong>
+                                        </td>
+                                        <td style="background:#cccccc;" align="center">
+                                            <strong>
+                                                <span t-field="doc.amount_total"
+                                                      style="color: #333333;font-size: 18px;"
+                                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <strong class="text-left"
+                                                style="color: #333333;font-size:12pt !important;margin-left: 3em;">
+                                            Signature: .................................... التوقيع
+                                        </strong>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div style="text-center">
+                                    <center>
+                                        <strong style="color: #333333;">سعدنا بخدمتكم ... ونشكرك لإختيارك كير ون
+                                        </strong>
+                                    </center>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

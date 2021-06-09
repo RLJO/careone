@@ -1,7 +1,9 @@
 from odoo import api, fields, models
 
 import logging
+
 _logger = logging.getLogger(__name__)
+
 
 # class FleetVehicle(models.Model):
 #     _inherit = 'fleet.vehicle'
@@ -25,10 +27,11 @@ _logger = logging.getLogger(__name__)
 #         return res
 
 
-
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
-    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle', )
+    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
+    vehicle_license_plate = fields.Char(related='vehicle_id.license_plate', strore=True)
+
     category_ids = fields.Many2many(related='vehicle_id.category_ids')
     external_coupon = fields.Char('External Coupon')
     count_vehicle_part = fields.Char(compute='_count_vehicle_parts', type='integer', string="Vehicle Parts")
@@ -54,4 +57,9 @@ class SaleVehicleParts(models.Model):
     _rec_name = 'order_id'
 
     order_id = fields.Many2one('sale.order', 'Sale Order')
-    image = fields.Binary('Vehicle Part')
+    image1 = fields.Binary('Vehicle Part')
+    image2 = fields.Binary()
+    image3 = fields.Binary()
+    image4 = fields.Binary()
+
+    note = fields.Text()

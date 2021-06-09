@@ -10,10 +10,12 @@
     ====
     """,
     'depends': [
-        'sale', 'mrp'
+        'sale', 'mrp', 'stock', 'sale_stock'
     ],
     'data': [
         'views/sale_order_view.xml',
+        'views/mrp_production_view.xml',
+        'views/stock_picking_view.xml',
     ],
     'installable': True,
     'application': True,
